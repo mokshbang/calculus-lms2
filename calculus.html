@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculus with Ms. Maricris — Derivatives</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fffef9;
+      --yellow: #ffd94a;
+      --yellow-light: #fff8d6;
+      --coral: #ff6b6b;
+      --coral-light: #ffe8e8;
+      --teal: #2ec4b6;
+      --teal-light: #e0f7f5;
+      --purple: #845ec2;
+      --purple-light: #f0eafa;
+      --green: #3bb273;
+      --green-light: #e5f7ee;
+      --blue: #4285f4;
+      --blue-light: #e8f0fe;
+      --text: #2d2d2d;
+      --text-soft: #6b6b6b;
+      --border: #ebebeb;
+      --white: #ffffff;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.07);
+      --shadow-hover: 0 8px 40px rgba(0,0,0,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 2px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--yellow);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 3px 3px 0 #e6c000;
+    }
+
+    .logo-text {
+      font-size: 1rem; font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .header-score {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--green-light);
+      border: 2px solid var(--green);
+      border-radius: 99px;
+      padding: 0.4rem 1rem;
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--green);
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; animation: fadeUp 0.4s ease; }
+    .page.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HOME PAGE ── */
+    .home-hero {
+      background: linear-gradient(135deg, #fff8d6 0%, #ffe8e8 50%, #e0f7f5 100%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+
+    .home-hero::before {
+      content: '∫ dx dy dz';
+      position: absolute; top: 1rem; left: 2rem;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 4rem; opacity: 0.06; color: var(--purple);
+      pointer-events: none;
+    }
+
+    .home-hero::after {
+      content: "f'(x) = lim";
+      position: absolute; bottom: 1rem; right: 2rem;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 3rem; opacity: 0.06; color: var(--coral);
+      pointer-events: none;
+    }
+
+    .hero-emoji { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
+
+    .home-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .home-hero h1 span { color: var(--coral); }
+
+    .home-hero p {
+      font-size: 1rem; color: var(--text-soft);
+      max-width: 500px; margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    /* name input */
+    .name-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      max-width: 420px;
+      margin: 0 auto 2rem;
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .name-box label {
+      display: block;
+      font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-soft); margin-bottom: 0.5rem;
+    }
+
+    .name-box input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .name-box input:focus { border-color: var(--teal); }
+
+    /* topic cards */
+    .topics-section { padding: 2rem; max-width: 900px; margin: 0 auto; }
+
+    .topics-section h2 {
+      font-size: 1.3rem; font-weight: 800;
+      margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .topic-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .topic-card.locked { opacity: 0.5; cursor: not-allowed; }
+
+    .topic-card .card-accent {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 5px; border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .topic-card .card-icon {
+      font-size: 2rem; margin-bottom: 0.75rem; display: block;
+    }
+
+    .topic-card h3 {
+      font-size: 1rem; font-weight: 800;
+      color: var(--text); margin-bottom: 0.4rem;
+    }
+
+    .topic-card p {
+      font-size: 0.82rem; color: var(--text-soft);
+      line-height: 1.6; margin-bottom: 1rem;
+    }
+
+    .topic-meta {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.72rem; font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-teal   { background: var(--teal-light);   color: var(--teal); }
+    .badge-coral  { background: var(--coral-light);  color: var(--coral); }
+    .badge-purple { background: var(--purple-light); color: var(--purple); }
+    .badge-green  { background: var(--green-light);  color: var(--green); }
+    .badge-yellow { background: var(--yellow-light); color: #b8860b; }
+    .badge-blue   { background: var(--blue-light);   color: var(--blue); }
+
+    .topic-progress {
+      margin-top: 1rem;
+      background: var(--border);
+      height: 6px; border-radius: 99px; overflow: hidden;
+    }
+
+    .topic-progress-fill {
+      height: 100%; border-radius: 99px;
+      transition: width 0.6s ease;
+    }
+
+    /* ── LESSON PAGE ── */
+    .lesson-wrap { max-width: 760px; margin: 0 auto; padding: 2rem; }
+
+    .lesson-breadcrumb {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.82rem; color: var(--text-soft);
+      margin-bottom: 1.5rem; cursor: pointer;
+    }
+
+    .lesson-breadcrumb:hover { color: var(--teal); }
+
+    .lesson-header {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative; overflow: hidden;
+    }
+
+    .lesson-header::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 6px;
+    }
+
+    .lesson-tag {
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-soft); margin-bottom: 0.5rem;
+    }
+
+    .lesson-header h1 {
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--text); margin-bottom: 0.5rem;
+    }
+
+    .lesson-header p {
+      font-size: 0.9rem; color: var(--text-soft); line-height: 1.7;
+    }
+
+    .lesson-body {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .lesson-body h2 {
+      font-size: 1.1rem; font-weight: 800;
+      color: var(--text); margin: 1.5rem 0 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    .lesson-body h2:first-child { margin-top: 0; }
+
+    .lesson-body p {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--text); margin-bottom: 1rem;
+    }
+
+    .formula-box {
+      background: var(--yellow-light);
+      border: 2px solid var(--yellow);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.05rem;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .formula-box .formula-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #b8860b; margin-bottom: 0.5rem;
+    }
+
+    .example-box {
+      background: var(--teal-light);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 12px 12px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .example-box .ex-label {
+      font-size: 0.72rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--teal); margin-bottom: 0.5rem;
+    }
+
+    .example-box p {
+      font-size: 0.9rem; margin-bottom: 0.4rem;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .tip-box {
+      background: var(--purple-light);
+      border: 2px dashed var(--purple);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      color: var(--text);
+      display: flex; gap: 0.75rem; align-items: flex-start;
+    }
+
+    .tip-box .tip-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    .rules-table {
+      width: 100%; border-collapse: collapse;
+      margin: 1rem 0; font-size: 0.88rem;
+    }
+
+    .rules-table th {
+      background: var(--yellow);
+      padding: 0.6rem 1rem;
+      text-align: left; font-weight: 800;
+    }
+
+    .rules-table td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .rules-table tr:nth-child(even) td { background: var(--bg); }
+
+    .btn-start-quiz {
+      display: block; width: 100%;
+      padding: 1rem;
+      background: var(--coral);
+      color: white;
+      border: none; border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 0 #c94444;
+      margin-top: 1.5rem;
+    }
+
+    .btn-start-quiz:hover {
+      background: #e85555;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #c94444;
+    }
+
+    .btn-start-quiz:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    /* ── QUIZ PAGE ── */
+    .quiz-wrap { max-width: 680px; margin: 0 auto; padding: 2rem; }
+
+    .quiz-header {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .quiz-title { font-size: 1rem; font-weight: 800; }
+    .quiz-counter { font-size: 0.85rem; color: var(--text-soft); font-weight: 600; }
+
+    .quiz-progress-bar {
+      height: 8px; background: var(--border);
+      border-radius: 99px; overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue));
+      border-radius: 99px; transition: width 0.4s ease;
+    }
+
+    .question-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .question-num {
+      font-size: 0.72rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-soft); margin-bottom: 0.75rem;
+    }
+
+    .question-text {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text); line-height: 1.5;
+      margin-bottom: 1.5rem;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .option-btn {
+      width: 100%;
+      padding: 0.9rem 1.25rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      transform: translateX(4px);
+    }
+
+    .option-btn.correct {
+      background: var(--green-light);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .option-btn.wrong {
+      background: var(--coral-light);
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+
+    .option-letter {
+      width: 28px; height: 28px;
+      background: var(--border);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .option-btn.correct .option-letter { background: var(--green); color: white; }
+    .option-btn.wrong .option-letter { background: var(--coral); color: white; }
+
+    .feedback-box {
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      font-size: 0.88rem; font-weight: 600;
+      display: none;
+    }
+
+    .feedback-box.show { display: flex; align-items: flex-start; gap: 0.6rem; }
+    .feedback-box.correct-fb { background: var(--green-light); color: #155724; }
+    .feedback-box.wrong-fb { background: var(--coral-light); color: #8b1c1c; }
+
+    .btn-next {
+      display: none; width: 100%;
+      padding: 1rem;
+      background: var(--blue);
+      color: white; border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 0 #1a5fc8;
+      margin-top: 1rem;
+    }
+
+    .btn-next.show { display: block; }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #1a5fc8;
+    }
+
+    /* ── RESULTS PAGE ── */
+    .results-wrap { max-width: 600px; margin: 0 auto; padding: 2rem; text-align: center; }
+
+    .results-emoji { font-size: 4rem; margin-bottom: 1rem; display: block; }
+
+    .results-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .results-card h2 {
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--text); margin-bottom: 0.5rem;
+    }
+
+    .results-card p {
+      font-size: 0.95rem; color: var(--text-soft);
+      margin-bottom: 1.5rem; line-height: 1.6;
+    }
+
+    .score-big {
+      font-size: 4rem; font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .score-label {
+      font-size: 0.85rem; color: var(--text-soft);
+      font-weight: 600; margin-bottom: 2rem;
+    }
+
+    .score-breakdown {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+
+    .breakdown-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .breakdown-num {
+      font-size: 1.5rem; font-weight: 900;
+    }
+
+    .breakdown-label {
+      font-size: 0.78rem; color: var(--text-soft);
+      font-weight: 600; margin-top: 0.2rem;
+    }
+
+    .saving-status {
+      font-size: 0.85rem; color: var(--text-soft);
+      margin-bottom: 1.5rem; min-height: 1.2rem;
+    }
+
+    .btn-retry, .btn-home {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem; font-weight: 800;
+      cursor: pointer; border: none;
+      transition: all 0.2s; margin: 0.4rem;
+    }
+
+    .btn-retry {
+      background: var(--yellow);
+      color: var(--text);
+      box-shadow: 0 4px 0 #e6c000;
+    }
+
+    .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #e6c000; }
+
+    .btn-home {
+      background: var(--bg);
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .btn-home:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .score-breakdown { grid-template-columns: 1fr; }
+      .topics-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">📐</div>
+    <div>
+      <div class="logo-text">Ms. Maricris</div>
+      <div class="logo-sub">Calculus · Derivatives</div>
+    </div>
+  </div>
+  <div class="header-score" id="headerScore" style="display:none">
+    ⭐ <span id="headerScoreText">0 pts</span>
+  </div>
+</header>
+
+<!-- ══════════════ HOME PAGE ══════════════ -->
+<div id="page-home" class="page active">
+  <div class="home-hero">
+    <span class="hero-emoji">🧮</span>
+    <h1>Learn <span>Derivatives</span><br/>the fun way!</h1>
+    <p>Pick a lesson, study the concept, then test yourself with a quiz. Your score gets saved automatically. Let's go! 🚀</p>
+    <div class="name-box">
+      <label for="studentName">Your Name</label>
+      <input type="text" id="studentName" placeholder="Enter your name to begin..." autocomplete="off"/>
+    </div>
+  </div>
+
+  <div class="topics-section">
+    <h2>📚 Choose a Lesson</h2>
+    <div class="topics-grid" id="topicsGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════ LESSON PAGE ══════════════ -->
+<div id="page-lesson" class="page">
+  <div class="lesson-wrap" id="lessonContent"></div>
+</div>
+
+<!-- ══════════════ QUIZ PAGE ══════════════ -->
+<div id="page-quiz" class="page">
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <div class="quiz-title" id="quizTitle">Quiz</div>
+      <div class="quiz-counter" id="quizCounter">Question 1 of 5</div>
+    </div>
+    <div class="quiz-progress-bar">
+      <div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div>
+    </div>
+    <div id="quizBody"></div>
+  </div>
+</div>
+
+<!-- ══════════════ RESULTS PAGE ══════════════ -->
+<div id="page-results" class="page">
+  <div class="results-wrap">
+    <span class="results-emoji" id="resultsEmoji">🎉</span>
+    <div class="results-card">
+      <h2 id="resultsTitle">Great work!</h2>
+      <p id="resultsSubtitle">Here's how you did on this quiz.</p>
+      <div class="score-big" id="scoreDisplay">0%</div>
+      <div class="score-label" id="scoreFraction">0 / 0 correct</div>
+      <div class="score-breakdown">
+        <div class="breakdown-item">
+          <div class="breakdown-num" id="correctCount" style="color:var(--green)">0</div>
+          <div class="breakdown-label">✅ Correct</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-num" id="wrongCount" style="color:var(--coral)">0</div>
+          <div class="breakdown-label">❌ Incorrect</div>
+        </div>
+      </div>
+      <div class="saving-status" id="savingStatus">Saving your score...</div>
+      <button class="btn-retry" onclick="retryQuiz()">🔁 Try Again</button>
+      <button class="btn-home" onclick="goHome()">🏠 Back to Topics</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  CONFIGURATION
+//  Replace SHEET_URL with your Google Apps Script Web App URL
+//  after you deploy it (instructions in README)
+// ══════════════════════════════════════════
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyjhwgTfAMp49bf7U1dDCWh4dgIet9j5_i28po1kWEKLnqE8zff-9cS5NkIvKUYqJwYtA/exec";
+
+// ══════════════════════════════════════════
+//  COURSE DATA
+// ══════════════════════════════════════════
+const topics = [
+  {
+    id: "intro",
+    title: "What is a Derivative?",
+    icon: "💡",
+    color: "#ffd94a",
+    colorLight: "#fff8d6",
+    difficulty: "Beginner",
+    diffBadge: "badge-teal",
+    desc: "Understand the concept of rate of change and the limit definition of a derivative.",
+    locked: false,
+    lesson: {
+      intro: "A derivative tells us <strong>how fast something is changing</strong> at any given moment. Think of it as the speedometer of math — it measures instantaneous rate of change.",
+      sections: [
+        {
+          heading: "🔍 The Big Idea",
+          content: "Imagine you're driving a car. Your <em>position</em> changes over time — that's a function. The <em>speed</em> at any exact moment? That's the derivative. We write the derivative of f(x) as <strong>f'(x)</strong> or <strong>dy/dx</strong>.",
+        },
+        {
+          type: "formula",
+          label: "Limit Definition of a Derivative",
+          formula: "f'(x) = lim[h→0] ( f(x+h) − f(x) ) / h"
+        },
+        {
+          heading: "📖 What This Means",
+          content: "We look at two points on a curve that are very close together (distance h apart), find the slope of the line connecting them, then let h shrink toward zero. The slope we get in the limit is the derivative — the <em>exact</em> slope at that point.",
+        },
+        {
+          type: "example",
+          label: "Example",
+          lines: [
+            "Find f'(x) if f(x) = x²",
+            "f'(x) = lim[h→0] ((x+h)² − x²) / h",
+            "     = lim[h→0] (2xh + h²) / h",
+            "     = lim[h→0] (2x + h)",
+            "     = 2x  ✓"
+          ]
+        },
+        {
+          type: "tip",
+          text: "The derivative of x² is 2x. This means at x = 3, the slope of the curve is 6. At x = 0, the slope is 0 — that's the bottom of the parabola!"
+        }
+      ]
+    },
+    quiz: [
+      {
+        q: "What does a derivative measure?",
+        options: ["The area under a curve", "The instantaneous rate of change", "The total change over an interval", "The average value of a function"],
+        answer: 1,
+        explanation: "A derivative measures the instantaneous rate of change — how fast a function's output changes at a specific input value."
+      },
+      {
+        q: "The limit definition of f'(x) is:",
+        options: ["lim[h→∞] f(x+h)/f(x)", "lim[h→0] (f(x+h) − f(x)) / h", "lim[x→0] f(x+h) − f(x)", "lim[h→1] f(h) / x"],
+        answer: 1,
+        explanation: "The formal definition uses the limit as h approaches 0 of the difference quotient [f(x+h) − f(x)] / h."
+      },
+      {
+        q: "Using the limit definition, what is f'(x) if f(x) = x²?",
+        options: ["x", "2x", "x²", "2x²"],
+        answer: 1,
+        explanation: "Applying the limit definition to x² gives 2x. This is the Power Rule result: d/dx[xⁿ] = nxⁿ⁻¹."
+      },
+      {
+        q: "If f'(3) = 0, what does that tell us about f at x = 3?",
+        options: ["f(3) = 0", "The function is undefined at x = 3", "The function has a horizontal tangent at x = 3", "The function is increasing at x = 3"],
+        answer: 2,
+        explanation: "A zero derivative means the slope is zero — a horizontal tangent line. This often indicates a local maximum, minimum, or saddle point."
+      },
+      {
+        q: "The notation dy/dx means:",
+        options: ["d times y divided by d times x", "The derivative of y with respect to x", "The integral of y over x", "None of the above"],
+        answer: 1,
+        explanation: "dy/dx (Leibniz notation) represents the derivative of y with respect to x — how y changes as x changes."
+      }
+    ]
+  },
+  {
+    id: "power",
+    title: "The Power Rule",
+    icon: "⚡",
+    color: "#ff6b6b",
+    colorLight: "#ffe8e8",
+    difficulty: "Beginner",
+    diffBadge: "badge-coral",
+    desc: "Master the fastest way to differentiate polynomial functions using the Power Rule.",
+    locked: false,
+    lesson: {
+      intro: "The Power Rule is your best friend in calculus. It lets you find derivatives of any power of x in one quick step — no limits needed!",
+      sections: [
+        {
+          type: "formula",
+          label: "The Power Rule",
+          formula: "d/dx [ xⁿ ] = n · xⁿ⁻¹"
+        },
+        {
+          heading: "📋 Differentiation Rules Summary",
+          type: "table",
+          rows: [
+            ["d/dx [c]", "0", "(constant)"],
+            ["d/dx [xⁿ]", "nxⁿ⁻¹", "(power rule)"],
+            ["d/dx [cf(x)]", "c·f'(x)", "(constant multiple)"],
+            ["d/dx [f+g]", "f' + g'", "(sum rule)"],
+          ]
+        },
+        {
+          heading: "📌 How to Apply It",
+          content: "Step 1: Identify the exponent n. Step 2: Multiply the coefficient by n. Step 3: Subtract 1 from the exponent. That's it!"
+        },
+        {
+          type: "example",
+          label: "Example 1 — Simple Power",
+          lines: [
+            "Find d/dx [x⁵]",
+            "n = 5",
+            "d/dx [x⁵] = 5x⁴  ✓"
+          ]
+        },
+        {
+          type: "example",
+          label: "Example 2 — With Coefficient",
+          lines: [
+            "Find d/dx [3x⁴]",
+            "= 3 · 4 · x³",
+            "= 12x³  ✓"
+          ]
+        },
+        {
+          type: "example",
+          label: "Example 3 — Polynomial",
+          lines: [
+            "Find d/dx [2x³ − 5x² + 7x − 4]",
+            "= 6x² − 10x + 7  ✓"
+          ]
+        },
+        {
+          type: "tip",
+          text: "The derivative of a constant is always 0. The constant term −4 vanished in Example 3 because d/dx[c] = 0."
+        }
+      ]
+    },
+    quiz: [
+      {
+        q: "Using the Power Rule, what is d/dx [x⁶]?",
+        options: ["x⁵", "6x⁵", "6x⁷", "x⁷"],
+        answer: 1,
+        explanation: "Power Rule: d/dx[xⁿ] = nxⁿ⁻¹. So d/dx[x⁶] = 6x⁵."
+      },
+      {
+        q: "What is d/dx [4x³]?",
+        options: ["4x²", "12x", "12x²", "3x²"],
+        answer: 2,
+        explanation: "Multiply coefficient by exponent, reduce exponent: 4 × 3 = 12, power becomes 3−1 = 2. Answer: 12x²."
+      },
+      {
+        q: "Find the derivative of f(x) = x² − 3x + 5",
+        options: ["2x − 3", "x − 3", "2x + 5", "2x² − 3"],
+        answer: 0,
+        explanation: "d/dx[x²] = 2x, d/dx[3x] = 3, d/dx[5] = 0. Result: 2x − 3."
+      },
+      {
+        q: "What is d/dx [7]?",
+        options: ["7", "1", "0", "7x"],
+        answer: 2,
+        explanation: "The derivative of any constant is 0. Constants have no rate of change."
+      },
+      {
+        q: "Using the Power Rule, what is d/dx [x^(1/2)]?",
+        options: ["(1/2)x^(3/2)", "(1/2)x^(-1/2)", "2x^(1/2)", "x^(-1/2)"],
+        answer: 1,
+        explanation: "n = 1/2, so d/dx[x^(1/2)] = (1/2)x^(1/2 − 1) = (1/2)x^(−1/2). This equals 1/(2√x)."
+      }
+    ]
+  },
+  {
+    id: "chain",
+    title: "Chain Rule",
+    icon: "🔗",
+    color: "#845ec2",
+    colorLight: "#f0eafa",
+    difficulty: "Intermediate",
+    diffBadge: "badge-purple",
+    desc: "Learn to differentiate composite functions using the Chain Rule.",
+    locked: false,
+    lesson: {
+      intro: "The Chain Rule is used when you have a <strong>function inside another function</strong> — a composite function. It's one of the most important differentiation rules you'll use.",
+      sections: [
+        {
+          type: "formula",
+          label: "The Chain Rule",
+          formula: "d/dx [f(g(x))] = f'(g(x)) · g'(x)"
+        },
+        {
+          heading: "🔍 How to Think About It",
+          content: "If y = f(u) and u = g(x), then dy/dx = (dy/du) · (du/dx). In plain English: <em>take the derivative of the outside, leave the inside alone, then multiply by the derivative of the inside.</em>"
+        },
+        {
+          type: "example",
+          label: "Example 1",
+          lines: [
+            "Find d/dx [(3x + 1)⁴]",
+            "Outside: u⁴  →  derivative = 4u³",
+            "Inside: u = 3x + 1  →  derivative = 3",
+            "Result: 4(3x+1)³ · 3 = 12(3x+1)³  ✓"
+          ]
+        },
+        {
+          type: "example",
+          label: "Example 2",
+          lines: [
+            "Find d/dx [sin(x²)]",
+            "Outside: sin(u)  →  derivative = cos(u)",
+            "Inside: u = x²  →  derivative = 2x",
+            "Result: cos(x²) · 2x = 2x·cos(x²)  ✓"
+          ]
+        },
+        {
+          type: "tip",
+          text: "A helpful memory trick: 'Derivative of outside (keep inside) × Derivative of inside.' Students often forget the last step — multiplying by the inner derivative. Don't drop it!"
+        }
+      ]
+    },
+    quiz: [
+      {
+        q: "Using the Chain Rule, find d/dx [(2x + 5)³]",
+        options: ["3(2x+5)²", "6(2x+5)²", "(2x+5)²", "3(2x+5)"],
+        answer: 1,
+        explanation: "Outer derivative: 3(2x+5)². Inner derivative: 2. Multiply: 3(2x+5)² × 2 = 6(2x+5)²."
+      },
+      {
+        q: "What is d/dx [sin(3x)]?",
+        options: ["sin(3x)", "cos(3x)", "3cos(3x)", "−3cos(3x)"],
+        answer: 2,
+        explanation: "Outer: d/dx[sin(u)] = cos(u). Inner: d/dx[3x] = 3. Result: cos(3x) · 3 = 3cos(3x)."
+      },
+      {
+        q: "Find d/dx [(x² + 1)⁵]",
+        options: ["5(x²+1)⁴", "10x(x²+1)⁴", "5x(x²+1)⁴", "10(x²+1)⁵"],
+        answer: 1,
+        explanation: "Outer: 5(x²+1)⁴. Inner: d/dx[x²+1] = 2x. Result: 5(x²+1)⁴ · 2x = 10x(x²+1)⁴."
+      },
+      {
+        q: "Which function requires the Chain Rule to differentiate?",
+        options: ["f(x) = x⁴", "f(x) = 3x + 2", "f(x) = (x² + 3)⁷", "f(x) = 5"],
+        answer: 2,
+        explanation: "(x² + 3)⁷ is a composite function — a power of 7 applied to (x² + 3). The others are simple functions."
+      },
+      {
+        q: "Using the Chain Rule, d/dx [e^(2x)] =",
+        options: ["e^(2x)", "2e^(2x)", "2xe^(x)", "e^(2x−1)"],
+        answer: 1,
+        explanation: "Outer: d/du[eᵘ] = eᵘ. Inner: d/dx[2x] = 2. Result: e^(2x) · 2 = 2e^(2x)."
+      }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let currentTopic = null;
+let currentQuiz = [];
+let currentQ = 0;
+let score = 0;
+let totalScore = 0;
+let answered = false;
+let completedTopics = {};
+
+// ══════════════════════════════════════════
+//  RENDER HOME
+// ══════════════════════════════════════════
+function renderHome() {
+  const grid = document.getElementById('topicsGrid');
+  grid.innerHTML = topics.map(t => {
+    const done = completedTopics[t.id];
+    const pct = done ? 100 : 0;
+    return `
+    <div class="topic-card ${t.locked ? 'locked' : ''}"
+         style="border-color:${done ? t.color : ''}"
+         onclick="${t.locked ? '' : `openLesson('${t.id}')`}">
+      <div class="card-accent" style="background:${t.color}"></div>
+      <span class="card-icon">${t.locked ? '🔒' : t.icon}</span>
+      <h3>${t.title}</h3>
+      <p>${t.desc}</p>
+      <div class="topic-meta">
+        <span class="badge ${t.diffBadge}">${t.difficulty}</span>
+        <span class="badge badge-yellow">5 Questions</span>
+        ${done ? `<span class="badge badge-green">✓ ${done}%</span>` : ''}
+      </div>
+      <div class="topic-progress">
+        <div class="topic-progress-fill" style="width:${pct}%;background:${t.color}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  OPEN LESSON
+// ══════════════════════════════════════════
+function openLesson(id) {
+  currentTopic = topics.find(t => t.id === id);
+  const l = currentTopic.lesson;
+  const color = currentTopic.color;
+
+  let html = `
+    <div class="lesson-breadcrumb" onclick="goHome()">← Back to Topics</div>
+    <div class="lesson-header">
+      <div style="position:absolute;top:0;left:0;right:0;height:6px;background:${color};border-radius:16px 16px 0 0"></div>
+      <div class="lesson-tag">${currentTopic.difficulty} · Derivatives</div>
+      <h1>${currentTopic.icon} ${currentTopic.title}</h1>
+      <p>${l.intro}</p>
+    </div>
+    <div class="lesson-body">`;
+
+  l.sections.forEach(s => {
+    if (s.heading && !s.type) {
+      html += `<h2>${s.heading}</h2><p>${s.content}</p>`;
+    } else if (s.type === 'formula') {
+      html += `<div class="formula-box"><div class="formula-label">${s.label}</div>${s.formula}</div>`;
+    } else if (s.type === 'example') {
+      html += `<div class="example-box"><div class="ex-label">${s.label}</div>${s.lines.map(l=>`<p>${l}</p>`).join('')}</div>`;
+    } else if (s.type === 'tip') {
+      html += `<div class="tip-box"><span class="tip-icon">💡</span><span>${s.text}</span></div>`;
+    } else if (s.type === 'table') {
+      html += `<h2>${s.heading}</h2>
+        <table class="rules-table">
+          <tr><th>Function</th><th>Derivative</th><th>Rule</th></tr>
+          ${s.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}
+        </table>`;
+    }
+  });
+
+  html += `
+    </div>
+    <button class="btn-start-quiz" onclick="startQuiz()">
+      Take the Quiz — ${currentTopic.title} ✏️
+    </button>`;
+
+  document.getElementById('lessonContent').innerHTML = html;
+  showPage('lesson');
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════
+function startQuiz() {
+  currentQuiz = [...currentTopic.quiz].sort(() => Math.random() - 0.5);
+  currentQ = 0; score = 0; answered = false;
+  document.getElementById('quizTitle').textContent = `Quiz: ${currentTopic.title}`;
+  renderQuestion();
+  showPage('quiz');
+  window.scrollTo(0, 0);
+}
+
+function renderQuestion() {
+  const total = currentQuiz.length;
+  const q = currentQuiz[currentQ];
+  const pct = (currentQ / total) * 100;
+
+  document.getElementById('quizCounter').textContent = `Question ${currentQ + 1} of ${total}`;
+  document.getElementById('quizProgressFill').style.width = pct + '%';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.getElementById('quizBody').innerHTML = `
+    <div class="question-card">
+      <div class="question-num">Question ${currentQ + 1}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options-list">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" onclick="selectAnswer(${i})" id="opt${i}">
+            <span class="option-letter">${letters[i]}</span>
+            ${opt}
+          </button>`).join('')}
+      </div>
+      <div class="feedback-box" id="feedbackBox"></div>
+    </div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+      ${currentQ + 1 < total ? 'Next Question →' : 'See Results 🎉'}
+    </button>`;
+  answered = false;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = currentQuiz[currentQ];
+  const isCorrect = idx === q.answer;
+  if (isCorrect) score++;
+
+  document.querySelectorAll('.option-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.className = `feedback-box show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = isCorrect
+    ? `✅ <span><strong>Correct!</strong> ${q.explanation}</span>`
+    : `❌ <span><strong>Not quite.</strong> ${q.explanation}</span>`;
+
+  document.getElementById('btnNext').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < currentQuiz.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+// ══════════════════════════════════════════
+//  RESULTS
+// ══════════════════════════════════════════
+function showResults() {
+  const total = currentQuiz.length;
+  const pct = Math.round((score / total) * 100);
+  completedTopics[currentTopic.id] = pct;
+
+  let emoji, title, subtitle;
+  if (pct === 100) { emoji = '🏆'; title = 'Perfect Score!'; subtitle = 'Outstanding work! You have mastered this topic.'; }
+  else if (pct >= 80) { emoji = '🎉'; title = 'Excellent!'; subtitle = 'Great job! You have a strong grasp of this topic.'; }
+  else if (pct >= 60) { emoji = '👍'; title = 'Good Effort!'; subtitle = 'You are getting there. Review the lesson and try again!'; }
+  else { emoji = '📖'; title = 'Keep Practicing!'; subtitle = 'Go back to the lesson and review before trying again.'; }
+
+  document.getElementById('resultsEmoji').textContent = emoji;
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('resultsSubtitle').textContent = subtitle;
+  document.getElementById('scoreDisplay').textContent = pct + '%';
+  document.getElementById('scoreDisplay').style.color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--coral)';
+  document.getElementById('scoreFraction').textContent = `${score} / ${total} correct`;
+  document.getElementById('correctCount').textContent = score;
+  document.getElementById('wrongCount').textContent = total - score;
+
+  totalScore += score;
+  document.getElementById('headerScoreText').textContent = totalScore + ' pts';
+  document.getElementById('headerScore').style.display = 'flex';
+
+  showPage('results');
+  window.scrollTo(0, 0);
+  saveScore(pct);
+}
+
+// ══════════════════════════════════════════
+//  SAVE TO GOOGLE SHEETS
+// ══════════════════════════════════════════
+async function saveScore(pct) {
+  const status = document.getElementById('savingStatus');
+  const name = document.getElementById('studentName').value.trim() || 'Anonymous';
+
+  if (SHEET_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+    status.innerHTML = '⚠️ Score saving not set up yet. <a href="#" style="color:var(--blue)">See setup guide.</a>';
+    return;
+  }
+
+  status.textContent = '⏳ Saving your score...';
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        topic: currentTopic.title,
+        score: pct,
+        correct: score,
+        total: currentQuiz.length,
+        date: new Date().toLocaleString()
+      })
+    });
+    status.textContent = '✅ Score saved to grade sheet!';
+  } catch (e) {
+    status.textContent = '⚠️ Could not save score. Check your connection.';
+  }
+}
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+}
+
+function goHome() {
+  showPage('home');
+  renderHome();
+  window.scrollTo(0, 0);
+}
+
+function retryQuiz() { startQuiz(); }
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+renderHome();
+</script>
+
+</body>
+</html>
